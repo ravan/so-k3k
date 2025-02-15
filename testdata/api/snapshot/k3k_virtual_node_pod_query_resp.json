@@ -1,0 +1,138 @@
+{
+  "viewSnapshotResponse": {
+    "components": [
+      {
+        "id": 278777192830775,
+        "name": "k3k-mycluster-kubelet-678989bfd5-7lqr6",
+        "lastUpdateTimestamp": 1739606727025,
+        "type": 58525993801784,
+        "layer": 0,
+        "domain": 0,
+        "environments": [
+          124769580969917
+        ],
+        "state": {
+          "id": 244782207403939,
+          "lastUpdateTimestamp": 1739606729052,
+          "healthState": "CLEAR",
+          "_type": "StackElementState"
+        },
+        "outgoingRelations": [
+          151089325979171,
+          233240871057920,
+          128258296173819,
+          257327989938322,
+          70285089492559
+        ],
+        "incomingRelations": [
+          183594770324296,
+          25551747177866
+        ],
+        "synchronized": true,
+        "failingChecks": [],
+        "retrievalSource": "QUERY",
+        "identifiers": [
+          "urn:kubernetes:/vcluster/pod/c59faff1-4dd6-4460-b634-624ebda32f7c",
+          "urn:kubernetes:/vcluster:layer3:pod/k3k-mycluster-kubelet-678989bfd5-7lqr6"
+        ],
+        "tags": [
+          "stackpack:kubernetes",
+          "service-account:k3k-mycluster-kubelet",
+          "type:agent",
+          "pod-template-hash:678989bfd5",
+          "component-type:kubernetes-pod",
+          "mode:shared",
+          "replicaset:k3k-mycluster-kubelet-678989bfd5",
+          "namespace:layer3",
+          "cluster-name:vcluster",
+          "node-name:k3k-vcluster-server-0",
+          "cluster:mycluster",
+          "cluster-type:kubernetes"
+        ],
+        "properties": {
+          "clusterNameIdentifier": "urn:cluster:/kubernetes:vcluster",
+          "readyContainers": "1",
+          "nodeName": "k3k-vcluster-server-0",
+          "namespaceIdentifier": "urn:kubernetes:/vcluster:namespace/layer3",
+          "totalContainers": "1",
+          "ownerName": "k3k-mycluster-kubelet-678989bfd5 (replicaset)",
+          "restarts": "0",
+          "nodeIdentifier": "urn:kubernetes:/vcluster:node/k3k-vcluster-server-0",
+          "readyContainersStatus": "CLEAR",
+          "creationTimestamp": "2025-02-15T08:05:03Z",
+          "podPhase": "Running",
+          "ownerIdentifier": "urn:kubernetes:/vcluster:layer3:replicaset/k3k-mycluster-kubelet-678989bfd5",
+          "podIP": "10.44.0.14"
+        },
+        "_type": "ViewComponent"
+      }
+    ],
+    "relations": [],
+    "indirectRelations": [],
+    "groups": [],
+    "groupRelations": [],
+    "metadata": {
+      "layers": [
+        {
+          "id": 218284772638170,
+          "lastUpdateTimestamp": 1736515022721,
+          "name": "Containers",
+          "order": 9000.0,
+          "_type": "Layer"
+        },
+        {
+          "id": -1,
+          "name": "Incoming",
+          "order": -1.7976931348623157E+308,
+          "_type": "Layer"
+        },
+        {
+          "id": 0,
+          "name": "Selection",
+          "order": 0.0,
+          "_type": "Layer"
+        },
+        {
+          "id": -2,
+          "name": "Outgoing",
+          "order": 1.7976931348623157E+308,
+          "_type": "Layer"
+        }
+      ],
+      "domains": [
+        {
+          "id": 158666621795235,
+          "lastUpdateTimestamp": 1739455514273,
+          "name": "vcluster",
+          "order": 941.0,
+          "_type": "Domain"
+        },
+        {
+          "id": 0,
+          "name": "",
+          "order": 0.0,
+          "_type": "Domain"
+        }
+      ],
+      "environments": [
+        {
+          "id": 124769580969917,
+          "lastUpdateTimestamp": 1736515022721,
+          "name": "Production",
+          "_type": "Environment"
+        }
+      ],
+      "groupedByLayers": false,
+      "groupedByDomains": false,
+      "_type": "ViewSnapshotMetadata"
+    },
+    "traversalResult": {
+      "allHiddenPathsTraversed": true,
+      "allConnectedComponentsFound": true,
+      "_type": "ViewTraversalResult"
+    },
+    "_type": "ViewSnapshot"
+  },
+  "viewId": 255720557161392,
+  "_type": "QuerySnapshotResult"
+}

@@ -1,0 +1,284 @@
+{
+  "viewSnapshotResponse": {
+    "components": [
+      {
+        "id": 208129958600343,
+        "name": "k3k-vcluster-server-0",
+        "description": "",
+        "lastUpdateTimestamp": 1739606073332,
+        "type": 133816912004529,
+        "layer": 0,
+        "domain": 0,
+        "environments": [
+          124769580969917
+        ],
+        "state": {
+          "id": 86479804375819,
+          "lastUpdateTimestamp": 1739606039342,
+          "healthState": "CLEAR",
+          "_type": "StackElementState"
+        },
+        "outgoingRelations": [
+          41097501624002
+        ],
+        "incomingRelations": [
+          215955682623086,
+          52778006221940,
+          167468602996485,
+          215693547397461,
+          143905182277786,
+          73890546257830,
+          33456382821059,
+          240213895387963,
+          278329405582225,
+          89284817796154,
+          160851947408650,
+          202277906079765,
+          92488969773905,
+          241564086847295,
+          95043237332413,
+          109682862920095,
+          118262753360291,
+          199006858447677,
+          196181509765123,
+          99562906999418,
+          57011751206580,
+          170951482416430,
+          54446105285910,
+          117206019918208,
+          1370218564732,
+          172525152217531,
+          228853757094200,
+          90544796652357,
+          133710212079577,
+          222599223824038,
+          176562958064764,
+          138021118992501,
+          212591192646725,
+          255947723131595,
+          127009736120865,
+          157012122406625,
+          280945518800584,
+          142911769930029,
+          79076533275030,
+          50299875512785,
+          4819314444765,
+          113947666157428,
+          126188949883128,
+          205220228007347,
+          261977016446730,
+          128281764390276,
+          225609563669057,
+          232791063849782,
+          36628420303591,
+          107469052738970,
+          99043853701062,
+          221201039630458,
+          134946639747072,
+          276900773495490,
+          206264580996573,
+          158395886460400,
+          257327989938322,
+          152978133697951,
+          223594601801316,
+          277845328603619,
+          256091327971219,
+          122695586847569,
+          278738218834241,
+          251250253646674,
+          187848370593108,
+          119197392985486,
+          262699494718672,
+          134225207028948,
+          262154578325326,
+          200654676748464,
+          263785864129158,
+          79202259596981,
+          188430005170038,
+          183040396507273,
+          172996399631172,
+          16776752542046,
+          225809632607087,
+          4076318397304,
+          259016979108875,
+          156633188676375,
+          134024690806507,
+          249806507163427
+        ],
+        "synchronized": true,
+        "failingChecks": [],
+        "retrievalSource": "QUERY",
+        "identifiers": [
+          "urn:ip:/vcluster:k3k-vcluster-server-0:10.42.0.52",
+          "urn:kubernetes:/vcluster:node/k3k-vcluster-server-0",
+          "urn:host:/k3k-vcluster-server-0-vcluster"
+        ],
+        "tags": [
+          "kubernetes.io/arch:amd64",
+          "beta.kubernetes.io/instance-type:k3s",
+          "cluster-type:kubernetes",
+          "beta.kubernetes.io/os:linux",
+          "node.kubernetes.io/instance-type:k3s",
+          "kubernetes.io/os:linux",
+          "component-type:kubernetes-node",
+          "os:linux",
+          "node-role.kubernetes.io/etcd:true",
+          "stackpack:kubernetes",
+          "node-role.kubernetes.io/control-plane:true",
+          "beta.kubernetes.io/arch:amd64",
+          "kubernetes.io/hostname:k3k-vcluster-server-0",
+          "cluster-name:vcluster",
+          "stackpack:agent",
+          "host",
+          "node-role.kubernetes.io/master:true"
+        ],
+        "properties": {
+          "clusterNameIdentifier": "urn:cluster:/kubernetes:vcluster",
+          "hostname": "k3k-vcluster-server-0",
+          "creationTimestamp": "2025-02-15T07:47:56Z",
+          "internalIP": "10.42.0.52",
+          "nodeRole": "master, control-plane, etcd",
+          "sts_host": "k3k-vcluster-server-0-vcluster",
+          "kubeletVersion": "v1.31.0+k3s1",
+          "status": "Ready",
+          "allocatableMemory": "7939",
+          "allocatableCpu": "4000"
+        },
+        "_type": "ViewComponent"
+      },
+      {
+        "id": 129610888714089,
+        "name": "k3k-mycluster-kubelet",
+        "lastUpdateTimestamp": 1739607315930,
+        "type": 133816912004529,
+        "layer": 0,
+        "domain": 0,
+        "environments": [
+          124769580969917
+        ],
+        "state": {
+          "id": 202872093267540,
+          "lastUpdateTimestamp": 1739607329341,
+          "healthState": "CLEAR",
+          "_type": "StackElementState"
+        },
+        "outgoingRelations": [
+          52921667751558
+        ],
+        "incomingRelations": [
+          100958603697326,
+          28993809515187,
+          190972382497130,
+          140771409525571,
+          41687696526514,
+          132383094058417
+        ],
+        "synchronized": true,
+        "failingChecks": [],
+        "retrievalSource": "QUERY",
+        "identifiers": [
+          "urn:ip:/mycluster:k3k-mycluster-kubelet:10.45.213.78",
+          "urn:host:/k3k-mycluster-kubelet-mycluster",
+          "urn:kubernetes:/mycluster:node/k3k-mycluster-kubelet"
+        ],
+        "tags": [
+          "kubernetes.io/role:agent",
+          "cluster-type:kubernetes",
+          "beta.kubernetes.io/os:linux",
+          "kubernetes.io/hostname:k3k-mycluster-kubelet",
+          "kubernetes.io/os:linux",
+          "component-type:kubernetes-node",
+          "type:virtual-kubelet",
+          "stackpack:kubernetes",
+          "cluster-name:mycluster",
+          "node.kubernetes.io/exclude-from-external-load-balancers:true"
+        ],
+        "properties": {
+          "clusterNameIdentifier": "urn:cluster:/kubernetes:mycluster",
+          "hostname": "k3k-mycluster-kubelet",
+          "creationTimestamp": "2025-02-15T08:06:38Z",
+          "internalIP": "10.45.213.78",
+          "sts_host": "k3k-mycluster-kubelet-mycluster",
+          "kubeletVersion": "v1.26.1-k3s1",
+          "status": "Ready",
+          "allocatableMemory": "7939",
+          "allocatableCpu": "4000"
+        },
+        "_type": "ViewComponent"
+      }
+    ],
+    "relations": [],
+    "indirectRelations": [],
+    "groups": [],
+    "groupRelations": [],
+    "metadata": {
+      "layers": [
+        {
+          "id": 142819261101788,
+          "lastUpdateTimestamp": 1736515022721,
+          "name": "Machines",
+          "order": 13000.0,
+          "_type": "Layer"
+        },
+        {
+          "id": -1,
+          "name": "Incoming",
+          "order": -1.7976931348623157E+308,
+          "_type": "Layer"
+        },
+        {
+          "id": 0,
+          "name": "Selection",
+          "order": 0.0,
+          "_type": "Layer"
+        },
+        {
+          "id": -2,
+          "name": "Outgoing",
+          "order": 1.7976931348623157E+308,
+          "_type": "Layer"
+        }
+      ],
+      "domains": [
+        {
+          "id": 158666621795235,
+          "lastUpdateTimestamp": 1739455514273,
+          "name": "vcluster",
+          "order": 941.0,
+          "_type": "Domain"
+        },
+        {
+          "id": 195734623014591,
+          "lastUpdateTimestamp": 1739534953985,
+          "name": "mycluster",
+          "order": 942.0,
+          "_type": "Domain"
+        },
+        {
+          "id": 0,
+          "name": "",
+          "order": 0.0,
+          "_type": "Domain"
+        }
+      ],
+      "environments": [
+        {
+          "id": 124769580969917,
+          "lastUpdateTimestamp": 1736515022721,
+          "name": "Production",
+          "_type": "Environment"
+        }
+      ],
+      "groupedByLayers": false,
+      "groupedByDomains": false,
+      "_type": "ViewSnapshotMetadata"
+    },
+    "traversalResult": {
+      "allHiddenPathsTraversed": true,
+      "allConnectedComponentsFound": true,
+      "_type": "ViewTraversalResult"
+    },
+    "_type": "ViewSnapshot"
+  },
+  "_type": "QuerySnapshotResult"
+}

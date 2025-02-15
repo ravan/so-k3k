@@ -1,0 +1,452 @@
+{
+  "viewSnapshotResponse": {
+    "components": [
+      {
+        "id": 142061785835114,
+        "name": "coredns-5c6b6c5476-fth7l-kube-system-mycluster-636f726564-7673d",
+        "lastUpdateTimestamp": 1739606816611,
+        "type": 58525993801784,
+        "layer": 0,
+        "domain": 0,
+        "environments": [
+          124769580969917
+        ],
+        "state": {
+          "id": 45383685642231,
+          "lastUpdateTimestamp": 1739606818956,
+          "healthState": "CLEAR",
+          "_type": "StackElementState"
+        },
+        "outgoingRelations": [
+          192425079212788,
+          168621394663721,
+          122695586847569,
+          125344002240709
+        ],
+        "incomingRelations": [
+          99779274311053
+        ],
+        "synchronized": true,
+        "failingChecks": [],
+        "retrievalSource": "QUERY",
+        "identifiers": [
+          "urn:kubernetes:/vcluster:layer3:pod/coredns-5c6b6c5476-fth7l-kube-system-mycluster-636f726564-7673d",
+          "urn:kubernetes:/vcluster/pod/f1682801-0f53-4b1c-991b-07facb0f7164"
+        ],
+        "tags": [
+          "k3k.io/clusterName:mycluster",
+          "stackpack:kubernetes",
+          "cluster-type:kubernetes",
+          "component-type:kubernetes-pod",
+          "cluster-name:vcluster",
+          "node-name:k3k-vcluster-server-0",
+          "pod-template-hash:5c6b6c5476",
+          "service-account:default",
+          "namespace:layer3",
+          "k8s-app:kube-dns"
+        ],
+        "properties": {
+          "clusterNameIdentifier": "urn:cluster:/kubernetes:vcluster",
+          "readyContainers": "1",
+          "nodeName": "k3k-vcluster-server-0",
+          "namespaceIdentifier": "urn:kubernetes:/vcluster:namespace/layer3",
+          "totalContainers": "1",
+          "restarts": "0",
+          "nodeIdentifier": "urn:kubernetes:/vcluster:node/k3k-vcluster-server-0",
+          "podIP": "10.44.0.15",
+          "readyContainersStatus": "CLEAR",
+          "creationTimestamp": "2025-02-15T08:06:50Z",
+          "podPhase": "Running"
+        },
+        "_type": "ViewComponent"
+      },
+      {
+        "id": 223456003044184,
+        "name": "suse-observability-agent-cluster-agent-5d76f64c48-945gh-m-0f4f6",
+        "lastUpdateTimestamp": 1739607356568,
+        "type": 58525993801784,
+        "layer": 0,
+        "domain": 0,
+        "environments": [
+          124769580969917
+        ],
+        "state": {
+          "id": 245247211934309,
+          "lastUpdateTimestamp": 1739607359115,
+          "healthState": "CLEAR",
+          "_type": "StackElementState"
+        },
+        "outgoingRelations": [
+          135992879341742,
+          7176472054671,
+          91070716076492,
+          209673465693330,
+          156633188676375
+        ],
+        "incomingRelations": [
+          236781271159260
+        ],
+        "synchronized": true,
+        "failingChecks": [],
+        "retrievalSource": "QUERY",
+        "identifiers": [
+          "urn:kubernetes:/vcluster/pod/16a0e198-e174-45eb-9396-4caa11743e16",
+          "urn:kubernetes:/vcluster:layer3:pod/suse-observability-agent-cluster-agent-5d76f64c48-945gh-m-0f4f6"
+        ],
+        "tags": [
+          "k3k.io/clusterName:mycluster",
+          "stackpack:kubernetes",
+          "app.kubernetes.io/name:suse-observability-agent",
+          "app.kubernetes.io/instance:suse-observability-agent",
+          "cluster-type:kubernetes",
+          "component-type:kubernetes-pod",
+          "pod-template-hash:5d76f64c48",
+          "namespace:layer3",
+          "node-name:k3k-vcluster-server-0",
+          "service-account:default",
+          "cluster-name:vcluster",
+          "app.kubernetes.io/component:cluster-agent"
+        ],
+        "properties": {
+          "clusterNameIdentifier": "urn:cluster:/kubernetes:vcluster",
+          "readyContainers": "1",
+          "nodeName": "k3k-vcluster-server-0",
+          "namespaceIdentifier": "urn:kubernetes:/vcluster:namespace/layer3",
+          "totalContainers": "1",
+          "restarts": "0",
+          "nodeIdentifier": "urn:kubernetes:/vcluster:node/k3k-vcluster-server-0",
+          "podIP": "10.44.0.17",
+          "readyContainersStatus": "CLEAR",
+          "creationTimestamp": "2025-02-15T08:15:09Z",
+          "podPhase": "Running"
+        },
+        "_type": "ViewComponent"
+      },
+      {
+        "id": 39950572663913,
+        "name": "suse-observability-agent-checks-agent-59b9bf4f84-jb2bn",
+        "lastUpdateTimestamp": 1739607402514,
+        "type": 58525993801784,
+        "layer": 0,
+        "domain": 0,
+        "environments": [
+          124769580969917
+        ],
+        "state": {
+          "id": 194474951519571,
+          "lastUpdateTimestamp": 1739607329026,
+          "healthState": "CLEAR",
+          "_type": "StackElementState"
+        },
+        "outgoingRelations": [
+          126097869471970,
+          159662667432278,
+          130663076498001,
+          164883641645985,
+          132383094058417
+        ],
+        "incomingRelations": [
+          142313346891575
+        ],
+        "synchronized": true,
+        "failingChecks": [],
+        "retrievalSource": "QUERY",
+        "identifiers": [
+          "urn:kubernetes:/mycluster:monitoring:pod/suse-observability-agent-checks-agent-59b9bf4f84-jb2bn",
+          "urn:kubernetes:/mycluster/pod/967c8730-d46a-4440-a1f0-9d34169baefc"
+        ],
+        "tags": [
+          "stackpack:kubernetes",
+          "pod-template-hash:59b9bf4f84",
+          "replicaset:suse-observability-agent-checks-agent-59b9bf4f84",
+          "app.kubernetes.io/name:suse-observability-agent",
+          "cluster-type:kubernetes",
+          "component-type:kubernetes-pod",
+          "service-account:suse-observability-agent-checks-agent",
+          "node-name:k3k-mycluster-kubelet",
+          "cluster-name:mycluster",
+          "namespace:monitoring",
+          "app.kubernetes.io/instance:suse-observability-agent",
+          "app.kubernetes.io/component:checks-agent"
+        ],
+        "properties": {
+          "clusterNameIdentifier": "urn:cluster:/kubernetes:mycluster",
+          "readyContainers": "1",
+          "nodeName": "k3k-mycluster-kubelet",
+          "namespaceIdentifier": "urn:kubernetes:/mycluster:namespace/monitoring",
+          "totalContainers": "1",
+          "ownerName": "suse-observability-agent-checks-agent-59b9bf4f84 (replicaset)",
+          "restarts": "0",
+          "nodeIdentifier": "urn:kubernetes:/mycluster:node/k3k-mycluster-kubelet",
+          "readyContainersStatus": "CLEAR",
+          "creationTimestamp": "2025-02-15T08:15:05Z",
+          "podPhase": "Running",
+          "ownerIdentifier": "urn:kubernetes:/mycluster:monitoring:replicaset/suse-observability-agent-checks-agent-59b9bf4f84",
+          "podIP": "10.44.0.16"
+        },
+        "_type": "ViewComponent"
+      },
+      {
+        "id": 120931080120530,
+        "name": "coredns-5c6b6c5476-fth7l",
+        "lastUpdateTimestamp": 1739607315930,
+        "type": 58525993801784,
+        "layer": 0,
+        "domain": 0,
+        "environments": [
+          124769580969917
+        ],
+        "state": {
+          "id": 46655748839957,
+          "lastUpdateTimestamp": 1739607329074,
+          "healthState": "CLEAR",
+          "_type": "StackElementState"
+        },
+        "outgoingRelations": [
+          260985557290334,
+          257662156633782,
+          247265810551591,
+          28993809515187
+        ],
+        "incomingRelations": [
+          159522529141418,
+          52828009213260
+        ],
+        "synchronized": true,
+        "failingChecks": [],
+        "retrievalSource": "QUERY",
+        "identifiers": [
+          "urn:kubernetes:/mycluster:kube-system:pod/coredns-5c6b6c5476-fth7l",
+          "urn:kubernetes:/mycluster/pod/f7e47837-c686-44c8-af0c-4e01eaeb0d39"
+        ],
+        "tags": [
+          "service-account:coredns",
+          "stackpack:kubernetes",
+          "replicaset:coredns-5c6b6c5476",
+          "cluster-type:kubernetes",
+          "component-type:kubernetes-pod",
+          "node-name:k3k-mycluster-kubelet",
+          "k8s-app:kube-dns",
+          "cluster-name:mycluster",
+          "pod-template-hash:5c6b6c5476",
+          "namespace:kube-system"
+        ],
+        "properties": {
+          "clusterNameIdentifier": "urn:cluster:/kubernetes:mycluster",
+          "readyContainers": "1",
+          "nodeName": "k3k-mycluster-kubelet",
+          "namespaceIdentifier": "urn:kubernetes:/mycluster:namespace/kube-system",
+          "totalContainers": "1",
+          "ownerName": "coredns-5c6b6c5476 (replicaset)",
+          "restarts": "0",
+          "nodeIdentifier": "urn:kubernetes:/mycluster:node/k3k-mycluster-kubelet",
+          "readyContainersStatus": "CLEAR",
+          "creationTimestamp": "2025-02-15T08:05:38Z",
+          "podPhase": "Running",
+          "ownerIdentifier": "urn:kubernetes:/mycluster:kube-system:replicaset/coredns-5c6b6c5476",
+          "podIP": "10.44.0.15"
+        },
+        "_type": "ViewComponent"
+      },
+      {
+        "id": 40835563370873,
+        "name": "suse-observability-agent-checks-agent-59b9bf4f84-jb2bn-mo-67cf6",
+        "lastUpdateTimestamp": 1739607356568,
+        "type": 58525993801784,
+        "layer": 0,
+        "domain": 0,
+        "environments": [
+          124769580969917
+        ],
+        "state": {
+          "id": 114527953265569,
+          "lastUpdateTimestamp": 1739607359115,
+          "healthState": "CLEAR",
+          "_type": "StackElementState"
+        },
+        "outgoingRelations": [
+          109682862920095,
+          263780551772298,
+          232298243134952,
+          30302860917960
+        ],
+        "incomingRelations": [],
+        "synchronized": true,
+        "failingChecks": [],
+        "retrievalSource": "QUERY",
+        "identifiers": [
+          "urn:kubernetes:/vcluster/pod/171078ea-b69d-41c7-b291-a746ae6fb362",
+          "urn:kubernetes:/vcluster:layer3:pod/suse-observability-agent-checks-agent-59b9bf4f84-jb2bn-mo-67cf6"
+        ],
+        "tags": [
+          "k3k.io/clusterName:mycluster",
+          "stackpack:kubernetes",
+          "pod-template-hash:59b9bf4f84",
+          "app.kubernetes.io/name:suse-observability-agent",
+          "cluster-type:kubernetes",
+          "component-type:kubernetes-pod",
+          "namespace:layer3",
+          "cluster-name:vcluster",
+          "node-name:k3k-vcluster-server-0",
+          "service-account:default",
+          "app.kubernetes.io/instance:suse-observability-agent",
+          "app.kubernetes.io/component:checks-agent"
+        ],
+        "properties": {
+          "clusterNameIdentifier": "urn:cluster:/kubernetes:vcluster",
+          "readyContainers": "1",
+          "nodeName": "k3k-vcluster-server-0",
+          "namespaceIdentifier": "urn:kubernetes:/vcluster:namespace/layer3",
+          "totalContainers": "1",
+          "restarts": "0",
+          "nodeIdentifier": "urn:kubernetes:/vcluster:node/k3k-vcluster-server-0",
+          "podIP": "10.44.0.16",
+          "readyContainersStatus": "CLEAR",
+          "creationTimestamp": "2025-02-15T08:15:07Z",
+          "podPhase": "Running"
+        },
+        "_type": "ViewComponent"
+      },
+      {
+        "id": 40419610125933,
+        "name": "suse-observability-agent-cluster-agent-5d76f64c48-945gh",
+        "lastUpdateTimestamp": 1739607402514,
+        "type": 58525993801784,
+        "layer": 0,
+        "domain": 0,
+        "environments": [
+          124769580969917
+        ],
+        "state": {
+          "id": 188469907336443,
+          "lastUpdateTimestamp": 1739607329091,
+          "healthState": "CLEAR",
+          "_type": "StackElementState"
+        },
+        "outgoingRelations": [
+          100958603697326,
+          119349013194861,
+          56926296366753,
+          239005553388660,
+          256418685529387,
+          185172481785651
+        ],
+        "incomingRelations": [
+          56792242225378,
+          159295643902988
+        ],
+        "synchronized": true,
+        "failingChecks": [],
+        "retrievalSource": "QUERY",
+        "identifiers": [
+          "urn:kubernetes:/mycluster:monitoring:pod/suse-observability-agent-cluster-agent-5d76f64c48-945gh",
+          "urn:kubernetes:/mycluster/pod/f37a4eff-fe9a-4efc-b800-ccc4f600eceb"
+        ],
+        "tags": [
+          "stackpack:kubernetes",
+          "service-account:suse-observability-agent",
+          "app.kubernetes.io/name:suse-observability-agent",
+          "app.kubernetes.io/instance:suse-observability-agent",
+          "cluster-type:kubernetes",
+          "component-type:kubernetes-pod",
+          "pod-template-hash:5d76f64c48",
+          "node-name:k3k-mycluster-kubelet",
+          "app.kubernetes.io/component:cluster-agent",
+          "replicaset:suse-observability-agent-cluster-agent-5d76f64c48",
+          "cluster-name:mycluster",
+          "namespace:monitoring"
+        ],
+        "properties": {
+          "clusterNameIdentifier": "urn:cluster:/kubernetes:mycluster",
+          "readyContainers": "1",
+          "nodeName": "k3k-mycluster-kubelet",
+          "namespaceIdentifier": "urn:kubernetes:/mycluster:namespace/monitoring",
+          "totalContainers": "1",
+          "ownerName": "suse-observability-agent-cluster-agent-5d76f64c48 (replicaset)",
+          "restarts": "0",
+          "nodeIdentifier": "urn:kubernetes:/mycluster:node/k3k-mycluster-kubelet",
+          "readyContainersStatus": "CLEAR",
+          "creationTimestamp": "2025-02-15T08:15:05Z",
+          "podPhase": "Running",
+          "ownerIdentifier": "urn:kubernetes:/mycluster:monitoring:replicaset/suse-observability-agent-cluster-agent-5d76f64c48",
+          "podIP": "10.44.0.17"
+        },
+        "_type": "ViewComponent"
+      }
+    ],
+    "relations": [],
+    "indirectRelations": [],
+    "groups": [],
+    "groupRelations": [],
+    "metadata": {
+      "layers": [
+        {
+          "id": 218284772638170,
+          "lastUpdateTimestamp": 1736515022721,
+          "name": "Containers",
+          "order": 9000.0,
+          "_type": "Layer"
+        },
+        {
+          "id": -1,
+          "name": "Incoming",
+          "order": -1.7976931348623157E+308,
+          "_type": "Layer"
+        },
+        {
+          "id": 0,
+          "name": "Selection",
+          "order": 0.0,
+          "_type": "Layer"
+        },
+        {
+          "id": -2,
+          "name": "Outgoing",
+          "order": 1.7976931348623157E+308,
+          "_type": "Layer"
+        }
+      ],
+      "domains": [
+        {
+          "id": 195734623014591,
+          "lastUpdateTimestamp": 1739534953985,
+          "name": "mycluster",
+          "order": 942.0,
+          "_type": "Domain"
+        },
+        {
+          "id": 158666621795235,
+          "lastUpdateTimestamp": 1739455514273,
+          "name": "vcluster",
+          "order": 941.0,
+          "_type": "Domain"
+        },
+        {
+          "id": 0,
+          "name": "",
+          "order": 0.0,
+          "_type": "Domain"
+        }
+      ],
+      "environments": [
+        {
+          "id": 124769580969917,
+          "lastUpdateTimestamp": 1736515022721,
+          "name": "Production",
+          "_type": "Environment"
+        }
+      ],
+      "groupedByLayers": false,
+      "groupedByDomains": false,
+      "_type": "ViewSnapshotMetadata"
+    },
+    "traversalResult": {
+      "allHiddenPathsTraversed": true,
+      "allConnectedComponentsFound": true,
+      "_type": "ViewTraversalResult"
+    },
+    "_type": "ViewSnapshot"
+  },
+  "viewId": 261534698907339,
+  "_type": "QuerySnapshotResult"
+}
