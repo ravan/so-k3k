@@ -65,11 +65,8 @@ func (k *K3K) processVirtualNodePod(sc *Cluster) error {
 		slog.Warn("Expecting to find 1 pod associated with node", "node", sc.VirtualNode.NodeName, "count", len(podComponent))
 	} else {
 		pod := podComponent[0]
-		identifier, _ := lo.Find(pod.Identifiers, func(identifier string) bool {
-			return strings.Contains(identifier, sc.VirtualNode.NodeName)
-		})
 		sc.VirtualNode.PodName = pod.Name
-		sc.VirtualNode.PodIdentifier = identifier
+		sc.VirtualNode.PodIdentifier = pod.Identifiers[0]
 	}
 	return nil
 }
@@ -147,14 +144,14 @@ func (k *K3K) loadNodeInfo() error {
 				if k.LabelExists("type:virtual-kubelet", node.Tags) {
 					cluster.Shared = true
 					cluster.VirtualNode.NodeName = node.Name
-					cluster.VirtualNode.NodeIdentifier = fmt.Sprintf("urn:kubernetes:/%s:node/%s", clusterName, node.Name)
+					cluster.VirtualNode.NodeIdentifier = node.Identifiers[0]
 					lo.ForEach(lo.Values(cluster.Servers), func(server *Server, index int) {
-						server.NodeIdentifier = cluster.VirtualNode.NodeIdentifier
+						server.NodeIdentifiers = node.Identifiers
 						server.NodeName = node.Name
+						server.NodeAgent = true
 					})
-
 				} else if server, ok := cluster.Servers[node.Name]; ok {
-					server.NodeIdentifier = fmt.Sprintf("urn:kubernetes:/%s:node/%s", clusterName, node.Name)
+					server.NodeIdentifiers = node.Identifiers
 					server.NodeName = node.Name
 				} else {
 					slog.Error("server not in cluster found for node.", "cluster", clusterName, "node", node.Name, "server", node.Name)

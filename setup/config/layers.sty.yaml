@@ -1,0 +1,30 @@
+nodes:
+- _type: Layer
+  id: -1
+  identifier: urn:stackpack:common:layer:nodes
+  name: Nodes
+  order: 11500.104
+
+- _type: Layer
+  id: -2
+  identifier: urn:stackpack:common:layer:pods
+  name: Pods
+  order: 11500.102
+
+- _type: Layer
+  id: -3
+  identifier: urn:stackpack:common:layer:sharedpods
+  name: Shard Pods
+  order: 11500.101
+
+- _type: Layer
+  id: -4
+  identifier: urn:stackpack:common:layer:virtualnodes
+  name: Virtual Nodes
+  order: 11500.103
+
+- _type: Layer
+  id: -5
+  identifier: urn:stackpack:common:layer:k3kservers
+  name: k3k Servers
+  order: 11500.105

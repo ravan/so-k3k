@@ -1,0 +1,8 @@
+suseobservability:
+  api_url: https://xxxx.io
+  api_key: 181335xxxx
+  api_token: tRa6dxxxx
+
+instance:
+  type: k3k
+  url: inception

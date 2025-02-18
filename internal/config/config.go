@@ -26,6 +26,10 @@ func GetConfig() (*Configuration, error) {
 			configFile = *cf
 		}
 	}
+	if configFile != "" {
+		slog.Info("Using config file", "file", configFile)
+	}
+
 	c := &Configuration{Instance: receiver.Instance{}}
 	v := viper.New()
 	v.SetDefault("suseobservability.api_url", "")

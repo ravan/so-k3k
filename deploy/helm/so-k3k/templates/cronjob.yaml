@@ -30,14 +30,14 @@ spec:
             image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
             imagePullPolicy: {{ $.Values.image.pullPolicy }}
             env:
-            - name: STACKSTATE_API_URL
+            - name: SUSEOBSERVABILITY_API_URL
               value: {{$serverUrl}}
-            - name: STACKSTATE_API_KEY
+            - name: SUSEOBSERVABILITY_API_KEY
               valueFrom:
                 secretKeyRef:
                   key: API_KEY
                   name: {{ include "so-k3k.fullname" . }}-secret
-            - name: STACKSTATE_API_TOKEN
+            - name: SUSEOBSERVABILITY_API_TOKEN
               valueFrom:
                 secretKeyRef:
                   key: API_TOKEN

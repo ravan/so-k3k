@@ -1,4 +1,4 @@
-FROM golang:1.23-alpine AS builder
+FROM golang:1.24-alpine AS builder
 
 WORKDIR /app
 
@@ -10,7 +10,7 @@ COPY . .
 
 RUN go build -trimpath -o /app/k3ksync ./cmd/sync/main.go
 
-FROM alpine:3.20.3
+FROM alpine:3.21.3
 
 RUN apk --no-cache update && apk --no-cache add stress-ng
 

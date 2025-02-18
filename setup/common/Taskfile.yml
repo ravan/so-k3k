@@ -1,0 +1,107 @@
+version: '3'
+
+vars:
+  OBSERVABILITY_NS: monitoring # suse-observability
+  CLI: 'sts --url {{.SO_URL}} --api-token {{.SO_TOKEN}}'
+
+tasks:
+  shell-env:
+    desc: run 'eval $(dev:task shell-env)' to setup local kubectx
+    cmds:
+      - echo "export KUBECONFIG={{.KUBECONFIG_FILE}}"
+
+  start-vm:
+    cmds:
+      - limactl start {{.CLUSTER_NAME}}
+
+  stop-vm:
+    cmds:
+      - limactl stop {{.CLUSTER_NAME}}
+
+  ssh:
+    cmds:
+      - limactl shell {{.CLUSTER_NAME}}
+
+  create-vm:
+    cmds:
+      - limactl start --name {{.CLUSTER_NAME}} --disk 50 --cpus 4 --memory 8 template://k3s --tty=false
+      - ssh -F ~/.lima/{{.CLUSTER_NAME}}/ssh.config lima-{{.CLUSTER_NAME}} "echo fs.inotify.max_user_instances=8192 | sudo tee -a /etc/sysctl.conf"
+      - ssh -F ~/.lima/{{.CLUSTER_NAME}}/ssh.config lima-{{.CLUSTER_NAME}} "echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf"
+      - echo 'To setup local kubectl context run, eval $(task dev:shell-env)'
+
+  destroy-vm:
+    cmds:
+      - limactl delete {{.CLUSTER_NAME}} --force --tty=false
+      - limactl list
+
+  get-cluster-status:
+    cmds:
+      - kubectl get nodes {{.KUBECONFIG}}
+      - kubectl get pods --all-namespaces {{.KUBECONFIG}}
+
+  deploy-observability-agent:
+    silent: true
+    requires:
+      vars: [CLUSTER_NAME, KUBECONFIG, OBSERVABILITY_NS, SO_API_KEY, SO_URL ]
+    vars:
+      NETWORKTRACING_ENABLED: '{{default "true" .NETWORKTRACING_ENABLED}}'
+      CLUSTER_AGENT_ONLY: '{{default "false" .CLUSTER_AGENT_ONLY}}'
+    cmds:
+      - echo "Agent will sent data to '{{.CLUSTER_NAME}}' pipeline on server '{{.SO_URL}}'"
+      - |-
+        cat <<EOF | helm upgrade --install --create-namespace {{.KUBECONFIG}} --namespace {{.OBSERVABILITY_NS}} -f - suse-observability-agent suse-observability/suse-observability-agent
+        stackstate:
+          apiKey: {{.SO_API_KEY}}
+          cluster:
+            name: {{.CLUSTER_NAME}}
+          url: {{.SO_URL}}/receiver/stsAgent
+        nodeAgent:
+          skipKubeletTLSVerify: true
+          networkTracing:
+            enabled: false
+        EOF
+      - |
+        if [ "{{.CLUSTER_AGENT_ONLY}}" = "true" ]; then
+          echo "Cluster Agent Only deployment. Removing Node Agent and Log Agent Daemonset"
+          kubectl delete daemonset suse-observability-agent-node-agent -n {{.OBSERVABILITY_NS}} {{.KUBECONFIG}}
+          kubectl delete daemonset suse-observability-agent-logs-agent -n {{.OBSERVABILITY_NS}} {{.KUBECONFIG}}
+        fi
+      - echo "waiting for all pods to be in a ready state"
+      - sleep 5
+      - kubectl wait pod --all --for=condition=Ready --namespace={{.OBSERVABILITY_NS}} --timeout=10m {{.KUBECONFIG}}
+
+  create-k8s-stackpack-instance:
+    silent: true
+    requires:
+      vars: [ CLUSTER_NAME ]
+    cmds:
+      - echo "Creating kubernetes stackpack instance for '{{.CLUSTER_NAME}}'"
+      - "{{.CLI}} stackpack install -n kubernetes-v2 -p kubernetes_cluster_name={{.CLUSTER_NAME}}"
+
+  create-autosync-stackpack-instance:
+    silent: false
+    requires:
+      vars: [ TYPE, NAME ]
+    cmds:
+      - echo "Creating autosync stackpack instance for 'type={{.TYPE}} name={{.NAME}}'"
+      - "{{.CLI}} stackpack install -n autosync -p sts_instance_type={{.TYPE}} -p sts_instance_url={{.NAME}}"
+
+  upload-autosync-stackpack:
+    silent: true
+    requires:
+      vars: [ FILE ]
+    cmds:
+      - echo "Uploading auto-sync stackpack file - {{.FILE}}"
+      - "{{.CLI}} stackpack upload --file {{.FILE}}"
+
+  create-namespace:
+    silent: true
+    requires:
+      vars: [ NS ]
+    cmds:
+      - echo "Creating namespace {{.NS}}"
+      - kubectl create namespace {{.NS}} {{.KUBECONFIG}} --dry-run=client -o yaml | kubectl apply {{.KUBECONFIG}} -f -
+
+  undeploy-observability-agent:
+    cmds:
+      - helm uninstall {{.KUBECONFIG}} --namespace {{.OBSERVABILITY_NS}} suse-observability-agent

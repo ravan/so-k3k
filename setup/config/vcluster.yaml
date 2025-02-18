@@ -1,0 +1,7 @@
+apiVersion: k3k.io/v1alpha1
+kind: Cluster
+metadata:
+  name: vcluster
+spec:
+  mode: virtual
+  servers: 3

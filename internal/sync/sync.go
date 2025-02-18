@@ -6,7 +6,6 @@ import (
 	"github.com/ravan/stackstate-client/stackstate/receiver"
 	"github.com/samber/lo"
 	"log/slog"
-	"strings"
 )
 
 const (
@@ -50,20 +49,21 @@ func mapServerAndNodeRelation(s *k3k.Server, f *receiver.Factory) {
 	sComp.Data.Layer = "K3K Servers"
 	sComp.Data.Domain = s.OwnerClusterName
 
-	if s.NodeIdentifier == "" {
+	if len(s.NodeIdentifiers) == 0 {
 		slog.Warn("Server has no node identifier", "server", s.Name, "identifier", s.MustGetIdentifier())
 		return
 	}
 
-	nComp := f.MustNewComponent(s.NodeIdentifier, s.NodeName, "node")
+	nComp := f.MustNewComponent(s.NodeIdentifiers[0], s.NodeName, "node")
 	nComp.Data.Domain = s.ClusterName
-	if strings.HasPrefix(s.NodeName, "k3k-") && strings.HasSuffix(s.NodeName, "-kubelet") {
+	if s.NodeAgent {
 		nComp.Data.Layer = "K3K Virtual Nodes"
 		nComp.AddLabel("k3k-mode:shared")
 	} else {
 		nComp.Data.Layer = "Nodes"
 		nComp.AddLabel("k3k-mode:virtual")
 	}
+	nComp.Data.Identifiers = s.NodeIdentifiers
 	nComp.AddLabelKey("k3k-host-cluster", s.OwnerClusterName)
 	nComp.AddLabelKey("k3k-host-namespace", s.OwnerClusterNamespace)
 

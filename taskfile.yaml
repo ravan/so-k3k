@@ -6,12 +6,18 @@ vars:
   IMAGE_REPO: "{{.USER}}/so-k3k"
   VERSION: 0.0.1
 
-includes:
-  dev:
-    taskfile: ./setup
-    dir: ./setup
-
 tasks:
+  run:
+    silent: true
+    cmds:
+    - |
+      if test -f ./conf.yaml; then
+        export CONFIG_FILE=./conf.yaml
+        go run ./cmd/sync/main.go
+      else
+        echo "Please create conf.yaml and set required values for your environment."
+      fi
+      
   docker-build:
     cmds:
       - docker build . -t {{.IMAGE_REPO}}:{{.VERSION}}

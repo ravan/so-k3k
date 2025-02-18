@@ -1,0 +1,232 @@
+version: '3'
+
+dotenv: [ '../.env' ]
+
+includes:
+  stackpack:
+    taskfile: ./stackpack
+    dir: ./stackpack
+  dev:
+    taskfile: ./common
+
+vars:
+  LOCAL_INSTANCE: '{{.CLUSTER_NAME}}'
+  KUBECONFIG_FILE: '{{ if eq .LOCAL_CLUSTER "true" }}~/.lima/{{.LOCAL_INSTANCE}}/copied-from-guest/kubeconfig.yaml{{else}}{{.KUBECONFIG_FILE_PATH}}/{{.KUBECONFIG_FILE_NAME}}{{end}}'
+  KUBECONFIG: '--kubeconfig {{.KUBECONFIG_FILE}}'
+
+  IMAGE_REPO: "{{.USER}}/so-k3k"
+  VERSION: 0.0.1
+
+  VCLUSTER_NAME: vcluster
+  VCLUSTER_KUBECONFIG_FILE: '{{.KUBECONFIG_FILE_PATH}}/{{.VCLUSTER_NAME}}-kubeconfig.yaml'
+  VCLUSTER_KUBECONFIG: '--kubeconfig {{.VCLUSTER_KUBECONFIG_FILE}}'
+
+  SCLUSTER_NAME: scluster
+  SCLUSTER_KUBECONFIG_FILE: '{{.KUBECONFIG_FILE_PATH}}/{{.SCLUSTER_NAME}}-kubeconfig.yaml'
+  SCLUSTER_KUBECONFIG: '--kubeconfig {{.SCLUSTER_KUBECONFIG_FILE}}'
+
+tasks:
+
+  # -- General Tasks -- #
+  create-k3k-autosync-stackpack-instance:
+    silent: true
+    cmds:
+      - task: "dev:create-autosync-stackpack-instance"
+        vars:
+          TYPE: "k3k"
+          NAME: "inception"
+
+  # -- SUSE Observability Tasks -- #
+  so-upload-settings:
+    silent: true
+    cmds:
+      - "{{.CLI}} settings apply -f ./config/layers.sty.yaml"
+      - "{{.CLI}} settings apply -f ./config/k8s_k3k_mapping_func.sty.yaml"
+
+  # -- Native Cluster Tasks -- #
+  native-deploy-all:
+    silent: true
+    cmds:
+      - task: native-deploy-k3k-operator
+      - task: native-deploy-observability-agent
+
+  native-deploy-k3k-operator:
+    silent: true
+    cmds:
+      - helm repo add k3k https://rancher.github.io/k3k
+      - helm repo update
+      - helm upgrade --install --namespace k3k-system --create-namespace {{.KUBECONFIG}} k3k k3k/k3k --devel
+      - echo "waiting for all pods to be in a ready state"
+      - kubectl wait pod --all --for=condition=Ready --namespace=k3k-system --timeout=60s {{.KUBECONFIG}}
+
+  native-create-k8s-stackpack-instance:
+    - task: dev:create-k8s-stackpack-instance
+      vars:
+        CLUSTER_NAME: "{{.CLUSTER_NAME}}"
+
+  native-deploy-observability-agent:
+    - task: dev:deploy-observability-agent
+
+  native-deploy-so-k3k:
+    silent: true
+    cmds:
+      - |-
+        cat <<EOF |  helm upgrade --install --create-namespace {{.KUBECONFIG}} --namespace so-extensions k3k -f - ../deploy/helm/so-k3k
+        apiToken: {{.SO_TOKEN}}
+        apiKey: {{.SO_API_KEY}}
+        serverUrl: {{.SO_URL}}
+        instanceName: {{.CLUSTER_NAME}}
+        EOF
+
+  native-trigger-so-k3k-job:
+    silent: true
+    cmds:
+      - echo ""
+      - kubectl create job --from=cronjob/k3k-so-k3k "sync-so-k3k-$(date +%s)" -n so-extensions {{.KUBECONFIG}}
+
+
+  # -- Virtual Cluster Tasks -- #
+
+  vcluster-create:
+    silent: true
+    cmds:
+      - task: dev:create-namespace
+        vars:
+          NS: virtual-cluster
+      - kubectl apply -f ./config/vcluster.yaml --namespace virtual-cluster {{.KUBECONFIG}}
+      - sleep 5 # While k3k operator does its thing.
+      - printf "\nwaiting for all pods to be in a ready state"
+      - kubectl wait pod --all --for=condition=Ready --namespace=virtual-cluster --timeout=8m {{.KUBECONFIG}}
+      - sleep 2 # operator defines server 2
+      - kubectl get pods --namespace=virtual-cluster {{.KUBECONFIG}}
+      - kubectl wait pod --all --for=condition=Ready --namespace=virtual-cluster --timeout=8m {{.KUBECONFIG}}
+      - sleep 2 # operator defines server 3
+      - kubectl get pods --namespace=virtual-cluster {{.KUBECONFIG}}
+      - kubectl wait pod --all --for=condition=Ready --namespace=virtual-cluster --timeout=8m {{.KUBECONFIG}}
+      - task: vcluster-kubeconfig
+      - echo "Make sure to stated api port-forwarding. In separate terminal run 'task vcluster-portforward-api'."
+
+  vcluster-delete:
+    silent: true
+    cmds:
+      - kubectl get pods --namespace=virtual-cluster {{.KUBECONFIG}}
+      - printf "\nRemoving {{.VCLUSTER_NAME}} and its namespace\n"
+      - k3kcli cluster delete --namespace virtual-cluster {{.KUBECONFIG}} {{.VCLUSTER_NAME}}
+      - sleep 5 # While k3k operator does its thing.
+      - kubectl delete namespace virtual-cluster {{.KUBECONFIG}}
+
+  vcluster-kubeconfig:
+    silent: true
+    cmds:
+      - k3kcli kubeconfig generate --name {{.VCLUSTER_NAME}} --namespace virtual-cluster {{.KUBECONFIG}}
+      - |
+        sed "s|server: https://[^ ]*|server: https://localhost:8443|" {{.VCLUSTER_KUBECONFIG_FILE}} > temp.yaml 
+        mv temp.yaml {{.VCLUSTER_KUBECONFIG_FILE}}
+
+  vcluster-portforward-api:
+    - kubectl port-forward service/k3k-vcluster-service 8443:6443 --namespace virtual-cluster {{.KUBECONFIG}}
+
+  vcluster-shell-env:
+    desc: run 'eval $(task vcluster-shell-env)' to setup local kubectx
+    cmds:
+      - echo "export KUBECONFIG={{.VCLUSTER_KUBECONFIG_FILE}}"
+
+  vcluster-deploy-all:
+    silent: true
+    cmds:
+      - echo "Make sure you have stated api port-forwarding. In separate terminal run 'task vcluster-portforward-api'."
+      - task: vcluster-deploy-k3k-operator
+      - task: vcluster-increase-severs-fsnotify-limits
+      - task: vcluster-deploy-observability-agent
+
+  vcluster-deploy-k3k-operator:
+    silent: true
+    cmds:
+      - helm upgrade --install --namespace k3k-system --create-namespace {{.VCLUSTER_KUBECONFIG}} k3k k3k/k3k --devel
+      - echo "waiting for all pods to be in a ready state"
+      - kubectl wait pod --all --for=condition=Ready --namespace=k3k-system --timeout=60s {{.VCLUSTER_KUBECONFIG}}
+
+  vcluster-increase-severs-fsnotify-limits:
+    silent: true
+    cmds:
+      - echo "Updating max_queued_events, max_user_instances, max_user_watchers"
+      - for: [ '0', '1', '2' ]
+        cmd: |
+          echo "Updating server {{.ITEM}}"
+          kubectl exec k3k-vcluster-server-{{.ITEM}} {{.KUBECONFIG}} -q -n virtual-cluster -- sh -c "sysctl -w fs.inotify.max_queued_events=2099999999"
+          kubectl exec k3k-vcluster-server-{{.ITEM}} {{.KUBECONFIG}} -q -n virtual-cluster -- sh -c "sysctl -w fs.inotify.max_user_instances=2099999999"
+          kubectl exec k3k-vcluster-server-{{.ITEM}} {{.KUBECONFIG}} -q -n virtual-cluster -- sh -c "sysctl -w fs.inotify.max_user_watches=2099999999"
+
+  vcluster-create-k8s-stackpack-instance:
+    - task: dev:create-k8s-stackpack-instance
+      vars:
+        CLUSTER_NAME: "{{.VCLUSTER_NAME}}"
+
+  vcluster-deploy-observability-agent:
+    - task: dev:deploy-observability-agent
+      vars:
+        KUBECONFIG: "{{.VCLUSTER_KUBECONFIG}}"
+        CLUSTER_NAME: "{{.VCLUSTER_NAME}}"
+        NETWORKTRACING_ENABLED: "false"
+
+  # -- Shared Cluster Tasks -- #
+
+  scluster-create:
+    silent: true
+    cmds:
+      - task: dev:create-namespace
+        vars:
+          NS: shared-vcluster
+          KUBECONFIG: "{{.VCLUSTER_KUBECONFIG}}"
+      - k3kcli cluster create --namespace shared-vcluster {{.VCLUSTER_KUBECONFIG}} {{.SCLUSTER_NAME}}
+      - sleep 5 # While k3k operator does its thing.
+      - kubectl get pods --namespace=shared-vcluster {{.VCLUSTER_KUBECONFIG}}
+      - printf "\nwaiting for all pods to be in a ready state"
+      - kubectl wait pod --all --for=condition=Ready --namespace=shared-vcluster --timeout=8m {{.VCLUSTER_KUBECONFIG}}
+      - task: scluster-kubeconfig
+      - echo "Make sure to stated api port-forwarding. In separate terminal run 'task scluster-portforward-api'."
+
+  scluster-delete:
+    silent: true
+    cmds:
+      - kubectl get pods --namespace=shared-vcluster {{.VCLUSTER_KUBECONFIG}}
+      - printf "\nRemoving {{.SCLUSTER_NAME}} and its namespace\n"
+      - k3kcli cluster delete --namespace shared-vcluster {{.VCLUSTER_KUBECONFIG}} {{.SCLUSTER_NAME}}
+      - sleep 5 # While k3k operator does its thing.
+      - kubectl delete namespace shared-vcluster {{.VCLUSTER_KUBECONFIG}}
+
+  scluster-kubeconfig:
+    silent: true
+    cmds:
+      - k3kcli kubeconfig generate --name {{.SCLUSTER_NAME}} --namespace shared-vcluster {{.VCLUSTER_KUBECONFIG}}
+      - |
+        sed "s|server: https://[^ ]*|server: https://localhost:9443|" {{.SCLUSTER_KUBECONFIG_FILE}} > temp.yaml 
+        mv temp.yaml {{.SCLUSTER_KUBECONFIG_FILE}}
+
+  scluster-portforward-api:
+    - kubectl port-forward service/k3k-scluster-service 9443:6443 --namespace shared-vcluster {{.VCLUSTER_KUBECONFIG}}
+
+  scluster-shell-env:
+    desc: run 'eval $(task scluster-shell-env)' to setup local kubectx
+    cmds:
+      - echo "export KUBECONFIG={{.SCLUSTER_KUBECONFIG_FILE}}"
+
+  scluster-create-k8s-stackpack-instance:
+    - task: dev:create-k8s-stackpack-instance
+      vars:
+        CLUSTER_NAME: "{{.SCLUSTER_NAME}}"
+
+  scluster-deploy-all:
+    silent: true
+    cmds:
+      - echo "Make sure you started api port-forwarding. In separate terminal run 'task scluster-portforward-api'."
+      - task: scluster-deploy-observability-agent
+
+  scluster-deploy-observability-agent:
+    silent: true
+    cmds:
+      - task: dev:deploy-observability-agent
+        vars:
+          KUBECONFIG: "{{.SCLUSTER_KUBECONFIG}}"
+          CLUSTER_NAME: "{{.SCLUSTER_NAME}}"
+          CLUSTER_AGENT_ONLY: "true"

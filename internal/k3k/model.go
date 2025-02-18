@@ -38,8 +38,9 @@ type Server struct {
 	OwnerClusterName      string
 	OwnerClusterNamespace string
 	Identifiers           []string
-	NodeIdentifier        string
+	NodeIdentifiers       []string
 	NodeName              string
+	NodeAgent             bool
 }
 
 func (s Server) MustGetIdentifier() string {
