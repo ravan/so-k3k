@@ -1,0 +1,37 @@
+questions:
+- variable: serverUrl
+  label: "Server Url"
+  type: string
+  description: "Suse Observability Url"
+  required: true
+  group: General
+
+- variable: apiKey
+  label: "API Key"
+  type: secret
+  description: "Suse Observability Api Key used to send data."
+  required: true
+  group: General
+
+- variable: apiToken
+  label: "API Token"
+  type: secret
+  description: "Suse Observability CLI api token."
+  required: true
+  group: General
+
+- variable: instanceName
+  label: "Instance Name"
+  type: string
+  description: "Instance name as defined for the AutoSync StackPack instance in Suse Observability"
+  required: true
+  group: General
+
+- variable: schedule
+  label: "Schedule"
+  type: string
+  default: "*/5 * * * *"
+  description: "Cron schedule"
+  required: true
+  group: General
+
