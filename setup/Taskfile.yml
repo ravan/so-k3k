@@ -42,6 +42,12 @@ tasks:
     cmds:
       - "{{.CLI}} settings apply -f ./stackpack/functions/k8s_k3k_mapping_func.sty.yaml"
 
+  so-upload-ui-settings:
+    silent: true
+    cmds:
+      - task: stackpack:upload-overviews
+      - task: stackpack:upload-menu
+
   # -- Native Cluster Tasks -- #
   native-deploy-all:
     silent: true

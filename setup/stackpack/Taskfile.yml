@@ -2,7 +2,60 @@ version: '3'
 
 tasks:
   upload-menu:
-    silent: false
+    silent: true
     cmds:
       - "{{.CLI}} settings apply -f ./menu/k3k.yaml"
 
+  upload-overviews:
+    silent: true
+    cmds:
+      - "{{.CLI}} settings apply -f ./overview/servers.yaml"
+      - "{{.CLI}} settings apply -f ./overview/shared_pods.yaml"
+
+  upload-metric-bindings:
+    silent: true
+#    deps:
+#      - generate-metric-bindings
+    cmds:
+      - echo "Uploading metric bindings"
+#      - "{{.CLI}} settings apply -f ./metrics/sharedpod.yaml --context
+
+
+  # -- Utility Tasks -- #
+
+  generate-metric-bindings:
+    silent: true
+    internal: true
+    cmds:
+      - echo "Generate shared pods bindings"
+      - task: render
+        vars:
+          CTX: |-
+            {
+            "Prefix": "shared-pod",
+            "Filter": "gen_ai_system=\"${name}\"",
+            "Scope": "type in (\"genai.system.ollama\", \"genai.system.openai\")"
+            }
+          TEMPLATE: ./metrics/tpl/shared_pod.tmpl.yaml
+          OUTPUT: ./metrics/shared_pod.yaml
+
+  convert-svg-to-datauri:
+    silent: true
+    desc: "Convert svg to base64 data uri. Please supply svg file by executing 'convert-svg-todatauri -- <file>'"
+    requires:
+      var: [SVG]
+    vars:
+      SVG: "{{.CLI_ARGS}}"
+    cmds:
+      - echo "data:image/svg+xml;base64,$(base64 -i {{.SVG}})" | pbcopy
+      - echo "Base64 Data URI copied to clipboard"
+
+  render:
+    silent: true
+    desc: "Renders a golang template"
+    internal: true
+    requires:
+      vars: [CTX, TEMPLATE, OUTPUT]
+    cmds:
+      - |
+          echo '{{.CTX}}' | gomplate -c .=stdin:///in.json -f {{.TEMPLATE}} -o {{.OUTPUT}}

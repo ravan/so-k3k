@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="30px" height="30px" viewBox="0 0 142 142" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="69.833" cy="37.519" r="20" fill="#2453ff"/>
+  <circle cx="19.833" cy="97.519" r="20" fill="#3c8eef"/>
+  <circle cx="119.833" cy="97.519" r="20" fill="#192072"/>
+  <line x1="69.833" y1="37.519" x2="19.833" y2="97.519" stroke="#333" stroke-width="2"/>
+  <line x1="69.833" y1="37.519" x2="119.833" y2="97.519" stroke="#333" stroke-width="2"/>
+  <line x1="19.833" y1="97.519" x2="119.833" y2="97.519" stroke="#333" stroke-width="2"/>
+  <text x="44.833" y="87.519" font-family="Helvetica, sans-serif" font-size="24" fill="#30ba78" style="white-space: pre; font-size: 24px;">k</text>
+  <text x="59.833" y="77.519" font-family="Helvetica, sans-serif" font-size="30" fill="#ff5a2b" style="white-space: pre; font-size: 30px;">3</text>
+  <text x="79.833" y="87.519" font-family="Helvetica, sans-serif" font-size="24" fill="#30ba78" style="white-space: pre; font-size: 24px;">k</text>
+</svg>

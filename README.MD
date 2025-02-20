@@ -31,7 +31,7 @@ the agent's daemonset for these. In the shared cluster's kubeconfig context run,
 - kubectl delete daemonset suse-observability-agent-logs-agent -n monitoring
 ```
 
-## Extension Logic
+## Extension Design
 
 The extension builds on the existing Kubernetes data in SUSE Observability. It creates relations and adjusts `Layer` 
 properties to better map the K3K domain concepts.
@@ -46,6 +46,18 @@ this data with the default Kubernetes data, creating a more complete topology.
 
 See [Setup Guide](./setup/README.MD) for a comprehensive example of setting up an environment and deploying
 the extension.
+
+#### Custom Menu
+
+![menu](./setup/img/menu.png)
+
+#### k3k Servers Overview Page
+
+![menu](./setup/img/servers.png)
+
+#### k3k Shared Mode Pods Overview Page
+
+![shared pods](./setup/img/shared_pods.png)
 
 ## Helm Deployment
 

@@ -1,0 +1,132 @@
+nodes:
+  - id: -100
+    name: K3K servers view definition
+    overview:
+      columns:
+        - _type: ViewTypeTableColHealth
+        - title: Server
+          _type: ViewTypeTableColName
+        - title: Virtual Cluster
+          labelPrefix: cluster
+          pathToIdentifier:
+            - properties
+            - k3kHostClusterIdentifier
+          width: 200
+          _type: ViewTypeTableColComponentLink
+        - title: Mode
+          path:
+            - properties
+            - k3kMode
+          width: 100
+          _type: ViewTypeTableColText
+        - title: Host Namespace
+          labelPrefix: namespace
+          pathToIdentifier:
+            - properties
+            - namespaceIdentifier
+          width: 200
+          _type: ViewTypeTableColComponentLink
+        - title: Host Cluster
+          labelPrefix: cluster-name
+          pathToIdentifier:
+            - properties
+            - clusterNameIdentifier
+          width: 200
+          _type: ViewTypeTableColComponentLink
+        - title: Host Node
+          labelPrefix: node-name
+          pathToIdentifier:
+            - properties
+            - nodeIdentifier
+          width: 200
+          _type: ViewTypeTableColComponentLink
+        - title: Ready containers
+          readyPath:
+            - properties
+            - readyContainers
+          totalPath:
+            - properties
+            - totalContainers
+          statusPath:
+            - properties
+            - readyContainersStatus
+          _type: ViewTypeTableColReadyStatus
+        - title: CPU Usage
+          metricBindingIdentifier: urn:stackpack:kubernetes-v2:shared:metric-binding:pod-cpu-usage
+          width: 160
+          onlyTrendLine: false
+          _type: ViewTypeTableColMetricBinding
+        - title: Memory Usage
+          metricBindingIdentifier: urn:stackpack:kubernetes-v2:shared:metric-binding:pod-memory-usage
+          width: 160
+          onlyTrendLine: false
+          _type: ViewTypeTableColMetricBinding
+        - title: Restarts
+          path:
+            - properties
+            - restarts
+          width: 100
+          _type: ViewTypeTableColNumber
+        - title: Phase
+          path:
+            - properties
+            - podPhase
+          width: 100
+          _type: ViewTypeTableColText
+        - title: Age
+          path:
+            - properties
+            - creationTimestamp
+          _type: ViewTypeTableColDuration
+        - title: CPU Throttling
+          metricBindingIdentifier: urn:stackpack:kubernetes-v2:shared:metric-binding:pod-cpu-throttling
+          width: 145
+          onlyTrendLine: false
+          _type: ViewTypeTableColMetricBinding
+        - title: Request CPU %
+          query: round(sum by (cluster_name, namespace, pod_name)(container_cpu_usage / 1000000000) / sum by (cluster_name, namespace, pod_name) (kubernetes_cpu_requests), 0.001)
+          componentIdentifierTemplate: urn:kubernetes:/${cluster_name}:${namespace}:pod/${pod_name}
+          unit: percentunit
+          width: 140
+          _type: ViewTypeTableColPromql
+        - title: Limit CPU %
+          query: round(sum by (cluster_name, namespace, pod_name)(container_cpu_usage / 1000000000) / sum by (cluster_name, namespace, pod_name) (kubernetes_cpu_limits), 0.001)
+          componentIdentifierTemplate: urn:kubernetes:/${cluster_name}:${namespace}:pod/${pod_name}
+          unit: percentunit
+          width: 140
+          _type: ViewTypeTableColPromql
+        - title: Request Mem %
+          query: round(sum by (cluster_name, namespace, pod_name) (container_memory_usage) / sum by (cluster_name, namespace, pod_name) (kubernetes_memory_requests), 0.001)
+          componentIdentifierTemplate: urn:kubernetes:/${cluster_name}:${namespace}:pod/${pod_name}
+          unit: percentunit
+          width: 140
+          _type: ViewTypeTableColPromql
+        - title: Limit Mem %
+          query: round(sum by (cluster_name, namespace, pod_name) (container_memory_usage) / sum by (cluster_name, namespace, pod_name) (kubernetes_memory_limits), 0.001)
+          componentIdentifierTemplate: urn:kubernetes:/${cluster_name}:${namespace}:pod/${pod_name}
+          unit: percentunit
+          width: 140
+          _type: ViewTypeTableColPromql
+        - title: IP
+          path:
+            - properties
+            - podIP
+          width: 140
+          _type: ViewTypeTableColText
+      _type: ViewTypeOverview
+    flags:
+      - NoTopologyFilters
+    filters:
+      - prefix: cluster-name
+        name: cluster-name
+        _type: LabelPrefixedFilter
+      - prefix: namespace
+        name: namespace
+        _type: LabelPrefixedFilter
+      - tabs:
+          - EVENTS
+          - TRACES
+        _type: TopologyFilters
+    iconbase64: data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB3aWR0aD0iMzBweCIgaGVpZ2h0PSIzMHB4IiB2aWV3Qm94PSIwIDAgMTQyIDE0MiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8Y2lyY2xlIGN4PSI2OS44MzMiIGN5PSIzNy41MTkiIHI9IjIwIiBmaWxsPSIjMjQ1M2ZmIi8+CiAgPGNpcmNsZSBjeD0iMTkuODMzIiBjeT0iOTcuNTE5IiByPSIyMCIgZmlsbD0iIzNjOGVlZiIvPgogIDxjaXJjbGUgY3g9IjExOS44MzMiIGN5PSI5Ny41MTkiIHI9IjIwIiBmaWxsPSIjMTkyMDcyIi8+CiAgPGxpbmUgeDE9IjY5LjgzMyIgeTE9IjM3LjUxOSIgeDI9IjE5LjgzMyIgeTI9Ijk3LjUxOSIgc3Ryb2tlPSIjMzMzIiBzdHJva2Utd2lkdGg9IjIiLz4KICA8bGluZSB4MT0iNjkuODMzIiB5MT0iMzcuNTE5IiB4Mj0iMTE5LjgzMyIgeTI9Ijk3LjUxOSIgc3Ryb2tlPSIjMzMzIiBzdHJva2Utd2lkdGg9IjIiLz4KICA8bGluZSB4MT0iMTkuODMzIiB5MT0iOTcuNTE5IiB4Mj0iMTE5LjgzMyIgeTI9Ijk3LjUxOSIgc3Ryb2tlPSIjMzMzIiBzdHJva2Utd2lkdGg9IjIiLz4KICA8dGV4dCB4PSI0NC44MzMiIHk9Ijg3LjUxOSIgZm9udC1mYW1pbHk9IkhlbHZldGljYSwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzMwYmE3OCIgc3R5bGU9IndoaXRlLXNwYWNlOiBwcmU7IGZvbnQtc2l6ZTogMjRweDsiPms8L3RleHQ+CiAgPHRleHQgeD0iNTkuODMzIiB5PSI3Ny41MTkiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2EsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMzAiIGZpbGw9IiNmZjVhMmIiIHN0eWxlPSJ3aGl0ZS1zcGFjZTogcHJlOyBmb250LXNpemU6IDMwcHg7Ij4zPC90ZXh0PgogIDx0ZXh0IHg9Ijc5LjgzMyIgeT0iODcuNTE5IiBmb250LWZhbWlseT0iSGVsdmV0aWNhLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjI0IiBmaWxsPSIjMzBiYTc4IiBzdHlsZT0id2hpdGUtc3BhY2U6IHByZTsgZm9udC1zaXplOiAyNHB4OyI+azwvdGV4dD4KPC9zdmc+
+    identifier: urn:stackpack:k3k:shared:view-type:server
+    _type: ViewType

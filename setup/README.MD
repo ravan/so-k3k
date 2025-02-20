@@ -270,6 +270,18 @@ For each of the pipelines we created, we need  to `Edit` via context menu item a
 
 Please update and confirm the prompted for unlocking.
 
+#### Custom UI Elements
+
+We have custom that we need to upload to the SUSE Observability instance.
+
+- menu items
+- k3k server overview page
+- shared mode pods overview page
+
+```bash
+task so-upload-ui-settings
+```
+
 #### Deploy K3K Extension
 
 The K3K extension analyses the Kubernetes topology data in SUSE Observability and automatically creates relations,

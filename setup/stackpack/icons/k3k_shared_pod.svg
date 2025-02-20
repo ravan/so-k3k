@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg width="30px" height="30px" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <circle cx="70" cy="100" r="50" fill="#3c8eef" fill-opacity="0.7"/>
+  <circle cx="130" cy="100" r="50" fill="#fe7c3f" fill-opacity="0.7"/>
+  <text x="80" y="105" font-family="Arial, sans-serif" font-size="24" fill="#30ba78" text-anchor="middle" alignment-baseline="middle" style="white-space: pre;">shared</text>
+  <text x="140" y="105" font-family="Arial, sans-serif" font-size="24" fill="#fff" text-anchor="middle" alignment-baseline="middle" style="white-space: pre;"> pod</text>
+</svg>

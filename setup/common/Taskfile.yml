@@ -23,8 +23,11 @@ tasks:
       - limactl shell {{.CLUSTER_NAME}}
 
   create-vm:
+    silent: true
     cmds:
+      - echo "Creating VM {{.CLUSTER_NAME}}
       - limactl start --name {{.CLUSTER_NAME}} --disk 50 --cpus 4 --memory 8 template://k3s --tty=false
+      - echo "Patching fs.inotify settings"
       - ssh -F ~/.lima/{{.CLUSTER_NAME}}/ssh.config lima-{{.CLUSTER_NAME}} "echo fs.inotify.max_user_instances=8192 | sudo tee -a /etc/sysctl.conf"
       - ssh -F ~/.lima/{{.CLUSTER_NAME}}/ssh.config lima-{{.CLUSTER_NAME}} "echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf"
       - echo 'To setup local kubectl context run, eval $(task dev:shell-env)'

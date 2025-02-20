@@ -1,0 +1,132 @@
+nodes:
+  - id: -100
+    name: K3K servers view definition
+    overview:
+      columns:
+        - _type: ViewTypeTableColHealth
+        - title: Pod
+          _type: ViewTypeTableColName
+        - title: Role
+          path:
+            - properties
+            - k3kPodRole
+          width: 100
+          _type: ViewTypeTableColText
+        - title: Actual Pod
+          labelPrefix: k3k-host-podname
+          pathToIdentifier:
+            - properties
+            - k3kHostPodIdentifier
+          width: 200
+          _type: ViewTypeTableColComponentLink
+        - title: Cluster
+          labelPrefix: cluster-name
+          pathToIdentifier:
+            - properties
+            - clusterNameIdentifier
+          width: 200
+          _type: ViewTypeTableColComponentLink
+        - title: Ready containers
+          readyPath:
+            - properties
+            - readyContainers
+          totalPath:
+            - properties
+            - totalContainers
+          statusPath:
+            - properties
+            - readyContainersStatus
+          _type: ViewTypeTableColReadyStatus
+        - title: CPU Usage
+          metricBindingIdentifier: urn:stackpack:kubernetes-v2:shared:metric-binding:pod-cpu-usage
+          width: 160
+          onlyTrendLine: false
+          _type: ViewTypeTableColMetricBinding
+        - title: Memory Usage
+          metricBindingIdentifier: urn:stackpack:kubernetes-v2:shared:metric-binding:pod-memory-usage
+          width: 160
+          onlyTrendLine: false
+          _type: ViewTypeTableColMetricBinding
+        - title: Restarts
+          path:
+            - properties
+            - restarts
+          width: 100
+          _type: ViewTypeTableColNumber
+        - title: Phase
+          path:
+            - properties
+            - podPhase
+          width: 100
+          _type: ViewTypeTableColText
+        - title: Age
+          path:
+            - properties
+            - creationTimestamp
+          _type: ViewTypeTableColDuration
+        - title: CPU Throttling
+          metricBindingIdentifier: urn:stackpack:kubernetes-v2:shared:metric-binding:pod-cpu-throttling
+          width: 145
+          onlyTrendLine: false
+          _type: ViewTypeTableColMetricBinding
+        - title: Request CPU %
+          query: round(sum by (cluster_name, namespace, pod_name)(container_cpu_usage / 1000000000) / sum by (cluster_name, namespace, pod_name) (kubernetes_cpu_requests), 0.001)
+          componentIdentifierTemplate: urn:kubernetes:/${cluster_name}:${namespace}:pod/${pod_name}
+          unit: percentunit
+          width: 140
+          _type: ViewTypeTableColPromql
+        - title: Limit CPU %
+          query: round(sum by (cluster_name, namespace, pod_name)(container_cpu_usage / 1000000000) / sum by (cluster_name, namespace, pod_name) (kubernetes_cpu_limits), 0.001)
+          componentIdentifierTemplate: urn:kubernetes:/${cluster_name}:${namespace}:pod/${pod_name}
+          unit: percentunit
+          width: 140
+          _type: ViewTypeTableColPromql
+        - title: Request Mem %
+          query: round(sum by (cluster_name, namespace, pod_name) (container_memory_usage) / sum by (cluster_name, namespace, pod_name) (kubernetes_memory_requests), 0.001)
+          componentIdentifierTemplate: urn:kubernetes:/${cluster_name}:${namespace}:pod/${pod_name}
+          unit: percentunit
+          width: 140
+          _type: ViewTypeTableColPromql
+        - title: Limit Mem %
+          query: round(sum by (cluster_name, namespace, pod_name) (container_memory_usage) / sum by (cluster_name, namespace, pod_name) (kubernetes_memory_limits), 0.001)
+          componentIdentifierTemplate: urn:kubernetes:/${cluster_name}:${namespace}:pod/${pod_name}
+          unit: percentunit
+          width: 140
+          _type: ViewTypeTableColPromql
+        - title: Namespace
+          labelPrefix: namespace
+          pathToIdentifier:
+            - properties
+            - namespaceIdentifier
+          width: 200
+          _type: ViewTypeTableColComponentLink
+        - title: Node
+          labelPrefix: node-name
+          pathToIdentifier:
+            - properties
+            - nodeIdentifier
+          width: 200
+          _type: ViewTypeTableColComponentLink
+        - title: IP
+          path:
+            - properties
+            - podIP
+          width: 140
+          _type: ViewTypeTableColText
+      _type: ViewTypeOverview
+    flags:
+      - NoTopologyFilters
+    filters:
+      - prefix: cluster-name
+        name: cluster-name
+        _type: LabelPrefixedFilter
+      - prefix: namespace
+        name: namespace
+        _type: LabelPrefixedFilter
+      - tabs:
+          - EVENTS
+          - TRACES
+        _type: TopologyFilters
+    iconbase64: data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPHN2ZyB3aWR0aD0iMzBweCIgaGVpZ2h0PSIzMHB4IiB2aWV3Qm94PSIwIDAgMjAwIDIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8Y2lyY2xlIGN4PSI3MCIgY3k9IjEwMCIgcj0iNTAiIGZpbGw9IiMzYzhlZWYiIGZpbGwtb3BhY2l0eT0iMC43Ii8+CiAgPGNpcmNsZSBjeD0iMTMwIiBjeT0iMTAwIiByPSI1MCIgZmlsbD0iI2ZlN2MzZiIgZmlsbC1vcGFjaXR5PSIwLjciLz4KICA8dGV4dCB4PSI4MCIgeT0iMTA1IiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZpbGw9IiMzMGJhNzgiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGFsaWdubWVudC1iYXNlbGluZT0ibWlkZGxlIiBzdHlsZT0id2hpdGUtc3BhY2U6IHByZTsiPnNoYXJlZDwvdGV4dD4KICA8dGV4dCB4PSIxNDAiIHk9IjEwNSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjI0IiBmaWxsPSIjZmZmIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBhbGlnbm1lbnQtYmFzZWxpbmU9Im1pZGRsZSIgc3R5bGU9IndoaXRlLXNwYWNlOiBwcmU7Ij4gcG9kPC90ZXh0Pgo8L3N2Zz4=
+    identifier: urn:stackpack:k3k:shared:view-type:sharedpod
+    _type: ViewType
