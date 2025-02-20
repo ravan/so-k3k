@@ -4,7 +4,7 @@ dotenv: ['./.env']
 
 vars:
   IMAGE_REPO: "{{.USER}}/so-k3k"
-  VERSION: 0.0.1
+  VERSION: 0.0.2
 
 tasks:
   run:
@@ -17,11 +17,13 @@ tasks:
       else
         echo "Please create conf.yaml and set required values for your environment."
       fi
-      
+
   docker-build:
     cmds:
       - docker build . -t {{.IMAGE_REPO}}:{{.VERSION}}
+      - docker build . -t {{.IMAGE_REPO}}:latest
   docker-push:
     cmds:
       - echo $PASSWORD | docker login -u {{.USER}} --password-stdin
       - docker push {{.IMAGE_REPO}}:{{.VERSION}}
+      - docker push {{.IMAGE_REPO}}:latest

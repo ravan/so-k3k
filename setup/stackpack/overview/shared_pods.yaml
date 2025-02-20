@@ -19,6 +19,13 @@ nodes:
             - k3kHostPodIdentifier
           width: 200
           _type: ViewTypeTableColComponentLink
+        - title: Namespace
+          labelPrefix: namespace
+          pathToIdentifier:
+            - properties
+            - namespaceIdentifier
+          width: 200
+          _type: ViewTypeTableColComponentLink
         - title: Cluster
           labelPrefix: cluster-name
           pathToIdentifier:
@@ -93,13 +100,6 @@ nodes:
           unit: percentunit
           width: 140
           _type: ViewTypeTableColPromql
-        - title: Namespace
-          labelPrefix: namespace
-          pathToIdentifier:
-            - properties
-            - namespaceIdentifier
-          width: 200
-          _type: ViewTypeTableColComponentLink
         - title: Node
           labelPrefix: node-name
           pathToIdentifier:
