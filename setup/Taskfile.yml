@@ -40,8 +40,7 @@ tasks:
   so-upload-settings:
     silent: true
     cmds:
-      - "{{.CLI}} settings apply -f ./config/layers.sty.yaml"
-      - "{{.CLI}} settings apply -f ./config/k8s_k3k_mapping_func.sty.yaml"
+      - "{{.CLI}} settings apply -f ./stackpack/functions/k8s_k3k_mapping_func.sty.yaml"
 
   # -- Native Cluster Tasks -- #
   native-deploy-all:

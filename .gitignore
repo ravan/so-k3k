@@ -5,5 +5,4 @@
 /**/http_dump
 /kubeconfig
 /*.iml
-/setup/stackpack
 /setup/*-kubeconfig.yaml

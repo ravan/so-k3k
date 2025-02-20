@@ -1,0 +1,8 @@
+version: '3'
+
+tasks:
+  upload-menu:
+    silent: false
+    cmds:
+      - "{{.CLI}} settings apply -f ./menu/k3k.yaml"
+

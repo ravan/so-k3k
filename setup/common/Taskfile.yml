@@ -39,6 +39,14 @@ tasks:
       - kubectl get nodes {{.KUBECONFIG}}
       - kubectl get pods --all-namespaces {{.KUBECONFIG}}
 
+  delete-node:
+    silent: true
+    internal: true
+    requires:
+      vars: [IDS]
+    cmds:
+      - '{{.CLI}} settings delete --ids {{.IDS | join " --ids "}}'
+
   deploy-observability-agent:
     silent: true
     requires:
@@ -77,6 +85,20 @@ tasks:
     cmds:
       - echo "Creating kubernetes stackpack instance for '{{.CLUSTER_NAME}}'"
       - "{{.CLI}} stackpack install -n kubernetes-v2 -p kubernetes_cluster_name={{.CLUSTER_NAME}}"
+
+  delete-k8s-stackpack-instance:
+    silent: true
+    requires:
+      vars: [ CLUSTER_NAME ]
+    cmds:
+      - echo "Deleting kubernetes stackpack instance for '{{.CLUSTER_NAME}}'"
+      - |
+        id=$({{.CLI}} stackpack list-instances -n kubernetes-v2 --output json | jq -r '.instances[] | select(.config.kubernetes_cluster_name == "{{.CLUSTER_NAME}}") | .id')  
+        if [ -z "${id}" ]; then
+          echo "Instance not found."
+        else
+          {{.CLI}} stackpack uninstall -n kubernetes-v2 --ids ${id}
+        fi
 
   create-autosync-stackpack-instance:
     silent: false
