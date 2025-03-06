@@ -4,7 +4,7 @@ dotenv: ['./.env']
 
 vars:
   IMAGE_REPO: "{{.USER}}/so-k3k"
-  VERSION: 0.0.2
+  VERSION: 0.0.3
 
 tasks:
   run:

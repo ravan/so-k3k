@@ -71,6 +71,7 @@ type Cluster struct {
 	Nested           map[string]*Cluster
 	Servers          map[string]*Server
 	SharedPods       []*Pod
+	NoAgentInstalled bool
 }
 
 func (c *Cluster) IsNative() bool {

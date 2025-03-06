@@ -4,4 +4,4 @@ metadata:
   name: vcluster
 spec:
   mode: virtual
-  servers: 3
+  servers: 1

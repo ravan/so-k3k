@@ -135,6 +135,11 @@ func (k *K3K) loadNodeInfo() error {
 		if err != nil {
 			return err
 		}
+		if len(nodes) == 0 {
+			nativeCluster.NoAgentInstalled = true
+			continue
+		}
+
 		lo.ForEach(nodes, func(node api.ViewComponent, index int) {
 			clusterName := k.LabelValue(ClusterName, node.Tags)
 			cluster := nativeCluster.GetCluster(clusterName)
@@ -213,11 +218,15 @@ func (k *K3K) loadClusterInfo() error {
 			owner.add(item)
 		} else {
 			//native cluster
-			nativeClusters[item.OwnerClusterName] = &Cluster{
-				Name:   item.OwnerClusterName,
-				Nested: make(map[string]*Cluster),
+			if owner, ok := nativeClusters[item.OwnerClusterName]; ok {
+				owner.add(item)
+			} else {
+				nativeClusters[item.OwnerClusterName] = &Cluster{
+					Name:   item.OwnerClusterName,
+					Nested: make(map[string]*Cluster),
+				}
+				nativeClusters[item.OwnerClusterName].add(item)
 			}
-			nativeClusters[item.OwnerClusterName].add(item)
 		}
 	})
 	k.clusters = nativeClusters

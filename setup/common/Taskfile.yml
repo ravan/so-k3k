@@ -56,6 +56,7 @@ tasks:
       vars: [CLUSTER_NAME, KUBECONFIG, OBSERVABILITY_NS, SO_API_KEY, SO_URL ]
     vars:
       NETWORKTRACING_ENABLED: '{{default "true" .NETWORKTRACING_ENABLED}}'
+      PROCESS_AGENT_ENABLED: '{{default "true" .PROCESS_AGENT_ENABLED}}'
       CLUSTER_AGENT_ONLY: '{{default "false" .CLUSTER_AGENT_ONLY}}'
     cmds:
       - echo "Agent will sent data to '{{.CLUSTER_NAME}}' pipeline on server '{{.SO_URL}}'"
@@ -69,7 +70,10 @@ tasks:
         nodeAgent:
           skipKubeletTLSVerify: true
           networkTracing:
-            enabled: false
+            enabled: {{ if eq .NETWORKTRACING_ENABLED "true"}}true{{else}}false{{ end}}
+          containers:
+            processAgent:
+              enabled: {{ if eq .PROCESS_AGENT_ENABLED "true"}}true{{else}}false{{ end}}
         EOF
       - |
         if [ "{{.CLUSTER_AGENT_ONLY}}" = "true" ]; then
@@ -130,3 +134,13 @@ tasks:
   undeploy-observability-agent:
     cmds:
       - helm uninstall {{.KUBECONFIG}} --namespace {{.OBSERVABILITY_NS}} suse-observability-agent
+
+  find-danling-resources:
+    requires:
+      vars: [NS]
+    vars:
+      NS: "{{.CLI_ARGS}}"
+    cmds:
+      - kubectl api-resources --verbs=list --namespaced -o name {{.KUBECONFIG}} | xargs -n 1 kubectl get --show-kind --ignore-not-found {{.KUBECONFIG}} -n {{.NS}}
+      # - kubectl patch configmap rook-ceph-mon-endpoints -n rook-ceph -p '{"metadata":{"finalizers":[]}}' --type=merge {{.KUBECONFIG}}
+

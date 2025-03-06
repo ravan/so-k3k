@@ -1,6 +1,32 @@
 version: '3'
 
 tasks:
+  install:
+    silent: true
+    cmds:
+      - task: upload-overviews
+      - task: upload-menu
+
+  uninstall:
+    silent: true
+    cmds:
+      - task: delete-settings
+        vars:
+          TYPE: MainMenuGroup
+          NAME: Kubernetes Virtual Clusters
+      - for: [ 'Shared Pods', 'Servers' ]
+        task: delete-settings
+        vars:
+          TYPE: QueryView
+          NAME: '{{.ITEM}}'
+      - for:
+          - 'K3K servers view definition'
+          - 'K3K servers view definition'
+        task: delete-settings
+        vars:
+          TYPE: ViewType
+          NAME: '{{.ITEM}}'
+
   upload-menu:
     silent: true
     cmds:
@@ -12,32 +38,20 @@ tasks:
       - "{{.CLI}} settings apply -f ./overview/servers.yaml"
       - "{{.CLI}} settings apply -f ./overview/shared_pods.yaml"
 
-  upload-metric-bindings:
-    silent: true
-#    deps:
-#      - generate-metric-bindings
-    cmds:
-      - echo "Uploading metric bindings"
-#      - "{{.CLI}} settings apply -f ./metrics/sharedpod.yaml --context
-
 
   # -- Utility Tasks -- #
 
-  generate-metric-bindings:
-    silent: true
+  delete-settings:
     internal: true
+    vars:
+      ATTR: '{{default "name" .ATTR}}'
+    requires:
+      vars: [ TYPE, NAME ]
     cmds:
-      - echo "Generate shared pods bindings"
-      - task: render
-        vars:
-          CTX: |-
-            {
-            "Prefix": "shared-pod",
-            "Filter": "gen_ai_system=\"${name}\"",
-            "Scope": "type in (\"genai.system.ollama\", \"genai.system.openai\")"
-            }
-          TEMPLATE: ./metrics/tpl/shared_pod.tmpl.yaml
-          OUTPUT: ./metrics/shared_pod.yaml
+      - |-
+        echo "Looking up id for {{.NAME}}"
+        {{.CLI}} settings list --type {{.TYPE}} -o json | jq -r '.settings.[] | select(.{{.ATTR}} == "{{.NAME}}") | .id' | xargs -I {} {{.CLI}} settings delete --ids {}
+
 
   convert-svg-to-datauri:
     silent: true

@@ -25,6 +25,10 @@ vars:
   SCLUSTER_KUBECONFIG_FILE: '{{.KUBECONFIG_FILE_PATH}}/{{.SCLUSTER_NAME}}-kubeconfig.yaml'
   SCLUSTER_KUBECONFIG: '--kubeconfig {{.SCLUSTER_KUBECONFIG_FILE}}'
 
+  S2CLUSTER_NAME: s2cluster
+  S2CLUSTER_KUBECONFIG_FILE: '{{.KUBECONFIG_FILE_PATH}}/{{.S2CLUSTER_NAME}}-kubeconfig.yaml'
+  S2CLUSTER_KUBECONFIG: '--kubeconfig {{.S2CLUSTER_KUBECONFIG_FILE}}'
+
 tasks:
 
   # -- General Tasks -- #
@@ -36,6 +40,7 @@ tasks:
           TYPE: "k3k"
           NAME: "inception"
 
+
   # -- SUSE Observability Tasks -- #
   so-upload-settings:
     silent: true
@@ -45,8 +50,7 @@ tasks:
   so-upload-ui-settings:
     silent: true
     cmds:
-      - task: stackpack:upload-overviews
-      - task: stackpack:upload-menu
+      - task: stackpack:install
 
   # -- Native Cluster Tasks -- #
   native-deploy-all:
@@ -155,7 +159,7 @@ tasks:
     silent: true
     cmds:
       - echo "Updating max_queued_events, max_user_instances, max_user_watchers"
-      - for: [ '0', '1', '2' ]
+      - for: [ '0' ]
         cmd: |
           echo "Updating server {{.ITEM}}"
           kubectl exec k3k-vcluster-server-{{.ITEM}} {{.KUBECONFIG}} -q -n virtual-cluster -- sh -c "sysctl -w fs.inotify.max_queued_events=2099999999"
@@ -173,6 +177,7 @@ tasks:
         KUBECONFIG: "{{.VCLUSTER_KUBECONFIG}}"
         CLUSTER_NAME: "{{.VCLUSTER_NAME}}"
         NETWORKTRACING_ENABLED: "false"
+        PROCESS_AGENT_ENABLED: "true"
 
   # -- Shared Cluster Tasks -- #
 
@@ -234,4 +239,66 @@ tasks:
         vars:
           KUBECONFIG: "{{.SCLUSTER_KUBECONFIG}}"
           CLUSTER_NAME: "{{.SCLUSTER_NAME}}"
+          CLUSTER_AGENT_ONLY: "true"
+
+  # -- Shared Cluster 2 Tasks -- #
+
+  s2cluster-create:
+    silent: true
+    cmds:
+      - task: dev:create-namespace
+        vars:
+          NS: shared-vcluster
+          KUBECONFIG: "{{.KUBECONFIG}}"
+      - k3kcli cluster create --namespace shared-vcluster {{.KUBECONFIG}} {{.S2CLUSTER_NAME}}
+      - sleep 5 # While k3k operator does its thing.
+      - kubectl get pods --namespace=shared-vcluster {{.KUBECONFIG}}
+      - printf "\nwaiting for all pods to be in a ready state"
+      - kubectl wait pod --all --for=condition=Ready --namespace=shared-vcluster --timeout=8m {{.KUBECONFIG}}
+      - task: s2cluster-kubeconfig
+      - echo "Make sure to stated api port-forwarding. In separate terminal run 'task s2cluster-portforward-api'."
+
+  s2cluster-delete:
+    silent: true
+    cmds:
+      - kubectl get pods --namespace=shared-vcluster {{.KUBECONFIG}}
+      - printf "\nRemoving {{.S2CLUSTER_NAME}} and its namespace\n"
+      - k3kcli cluster delete --namespace shared-vcluster {{.KUBECONFIG}} {{.S2CLUSTER_NAME}}
+      - sleep 5 # While k3k operator does its thing.
+      - kubectl delete namespace shared-vcluster {{.KUBECONFIG}}
+
+  s2cluster-kubeconfig:
+    silent: true
+    cmds:
+      - k3kcli kubeconfig generate --name {{.S2CLUSTER_NAME}} --namespace shared-vcluster {{.KUBECONFIG}}
+      - |
+        sed "s|server: https://[^ ]*|server: https://localhost:9444|" {{.S2CLUSTER_KUBECONFIG_FILE}} > temp.yaml 
+        mv temp.yaml {{.S2CLUSTER_KUBECONFIG_FILE}}
+
+  s2cluster-portforward-api:
+    - kubectl port-forward service/k3k-s2cluster-service 9444:6443 --namespace shared-vcluster {{.KUBECONFIG}}
+
+  s2cluster-shell-env:
+    desc: run 'eval $(task s2cluster-shell-env)' to setup local kubectx
+    cmds:
+      - echo "export KUBECONFIG={{.S2CLUSTER_KUBECONFIG_FILE}}"
+
+  s2cluster-create-k8s-stackpack-instance:
+    - task: dev:create-k8s-stackpack-instance
+      vars:
+        CLUSTER_NAME: "{{.S2CLUSTER_NAME}}"
+
+  s2cluster-deploy-all:
+    silent: true
+    cmds:
+      - echo "Make sure you started api port-forwarding. In separate terminal run 'task s2cluster-portforward-api'."
+      - task: s2cluster-deploy-observability-agent
+
+  s2cluster-deploy-observability-agent:
+    silent: true
+    cmds:
+      - task: dev:deploy-observability-agent
+        vars:
+          KUBECONFIG: "{{.S2CLUSTER_KUBECONFIG}}"
+          CLUSTER_NAME: "{{.S2CLUSTER_NAME}}"
           CLUSTER_AGENT_ONLY: "true"
