@@ -56,6 +56,17 @@ func mapServerAndNodeRelation(s *k3k.Server, f *receiver.Factory) {
 		return
 	}
 
+	nComp := mapNode(s, f)
+	commonSeverAndNodeLabels(s, nComp)
+
+	f.MustNewRelation(nComp.ID, sComp.ID, "is hosted on")
+}
+
+func mapNode(s *k3k.Server, f *receiver.Factory) *receiver.Component {
+	if f.ComponentExists(s.NodeIdentifiers[0]) {
+		return f.MustGetComponent(s.NodeIdentifiers[0])
+	}
+	
 	nComp := f.MustNewComponent(s.NodeIdentifiers[0], s.NodeName, "node")
 	nComp.Data.Domain = s.ClusterName
 	if s.NodeAgent {
@@ -64,9 +75,7 @@ func mapServerAndNodeRelation(s *k3k.Server, f *receiver.Factory) {
 		nComp.Data.Layer = "Nodes"
 	}
 	nComp.Data.Identifiers = s.NodeIdentifiers
-	commonSeverAndNodeLabels(s, nComp)
-
-	f.MustNewRelation(nComp.ID, sComp.ID, "is hosted on")
+	return nComp
 }
 
 func commonSeverAndNodeLabels(s *k3k.Server, comp *receiver.Component) {
