@@ -1,0 +1,29 @@
+nodes:
+- _type: ComponentActionDefinition
+  bindQuery: type = "pod" AND label in ("role:server")
+  description: Show virtualization clusters connections to host cluster
+  identifier: urn:stackpack:k3k:component-action-definition:show-cluster-topo
+  id: -1
+  name: Show Virtualization Cluster Topology
+  script: |-
+    def compId = "id = '${component.id}'" 
+    def identifier = java.net.URLEncoder.encode(component.identifiers[0], "UTF-8")
+    
+    def hostClusterLabel = component.labels.find({it.name.startsWith('cluster-name:')})
+    def vClusterLabel = component.labels.find({it.name.startsWith('cluster:')})
+    def nsLabel = component.labels.find({it.name.startsWith('namespace:')})
+    
+    if (hostClusterLabel && vClusterLabel && nsLabel) {
+      def vClusterName = vClusterLabel.name.split(':')[1]
+      def query = "(type = 'pod' and label in('role:server') and label = '${hostClusterLabel.name}') OR " +
+      "(type = 'node' AND label in ( '${hostClusterLabel.name}', 'cluster-name:${vClusterName}')) OR " +
+      "(type = 'pod' AND label in ('${hostClusterLabel.name}') AND label = '${nsLabel.name}') OR " +
+      "(type = 'pod' AND label in ('cluster-name:${vClusterName}'))"
+      def rawUrl = UI.createUrl().explore().topologyQuery(query).url()
+      def host = rawUrl.split("#")[0]
+      def encodedQuery = java.net.URLEncoder.encode(query, "UTF-8")
+      def url = "${host}#/components/${identifier}/topology?query=${encodedQuery}&view=connectedComponents--0__neighboringComponents--0__groupDomains--1__groupLayers--1"
+      UI.redirectToURL(url)
+    } else {
+      UI.showReport("No 'cluster-name', 'namespace' and/or 'cluster' labels found! Contact developer.")
+    }

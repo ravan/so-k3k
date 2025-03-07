@@ -6,6 +6,7 @@ tasks:
     cmds:
       - task: upload-overviews
       - task: upload-menu
+      - task: upload-actions
 
   uninstall:
     silent: true
@@ -37,7 +38,12 @@ tasks:
     cmds:
       - "{{.CLI}} settings apply -f ./overview/servers.yaml"
       - "{{.CLI}} settings apply -f ./overview/shared_pods.yaml"
-
+      -
+  upload-actions:
+    silent: true
+    cmds:
+      - echo "Uploading actions"
+      - "{{.CLI}} settings apply -f ./actions/server-show-cluster-topo.yaml"
 
   # -- Utility Tasks -- #
 
